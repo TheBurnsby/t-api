@@ -48,7 +48,6 @@ async function authPlugin(fastify, options) {
 
             // ensure request.body is always an object
             request.body = request.body ?? {};
-            console.log(request.body)
         } catch (err) {
             reply.code(401).send({ error: 'Invalid or expired token' });
         }
