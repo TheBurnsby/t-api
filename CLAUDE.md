@@ -14,14 +14,16 @@ A Fastify API service that exposes custom endpoints for consumption by a separat
 
 - Always ask before making architectural changes.
 - Never make database requests inside loops.
+- Always use Fastify test utilities (e.g. `fastify.inject()`) first for route and handler testing before reaching for other tools like supertest or direct HTTP calls
 
 ## Commands
 
 ```bash
-npm test        # Starts the server (runs node index.js)
+npm start       # Start the server
+npm test        # Run all tests (node:test with module mocking)
 ```
 
-No build step, linter, or test framework is configured.
+No build step or linter is configured. Tests use Node's built-in `node:test` runner with `--experimental-test-module-mocks` for CJS module mocking. Test files live in `tests/` and follow the `*.test.js` naming convention.
 
 ## Architecture
 
@@ -31,4 +33,4 @@ A minimal [Fastify](https://fastify.dev/) v5 REST API running on port 8080.
 - **`routes/`** — Each file exports an async Fastify route plugin and is registered in `index.js`.
 - **`auth.js`** — A Fastify plugin (via `fastify-plugin`) that adds an `onRequest` hook to validate Microsoft Entra ID (Azure AD) Bearer tokens using `jsonwebtoken` + `jwks-rsa`. It reads `AZURE_TENANT_ID` and `AZURE_CLIENT_ID` from environment variables. Must be registered in `index.js` before route plugins.
 
-After auth, `request.user` is populated with the decoded JWT payload and `request.body` is guaranteed to be an object before route handlers run.
+After auth, `request.user` is populated with the decoded JWT payload for use in route handlers.
