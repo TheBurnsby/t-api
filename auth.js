@@ -7,6 +7,11 @@ const jwksClient = require('jwks-rsa');
 
 const TENANT_ID = process.env.AZURE_TENANT_ID;
 const AUDIENCE = process.env.AZURE_CLIENT_ID;
+
+if (!TENANT_ID || !AUDIENCE) {
+    throw new Error('Missing required env vars: AZURE_TENANT_ID and AZURE_CLIENT_ID must be set');
+}
+
 const ISSUER = `https://login.microsoftonline.com/${TENANT_ID}/v2.0`;
 const JWKS_URI = `https://login.microsoftonline.com/${TENANT_ID}/discovery/v2.0/keys`;
 
