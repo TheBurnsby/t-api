@@ -4,7 +4,7 @@ const fastify = require('fastify')({
 });
 
 // Register auth middleware
-// fastify.register(require('./auth'));
+fastify.register(require('./auth'));
 
 // Register routes
 fastify.register(require('./routes/hello'));
