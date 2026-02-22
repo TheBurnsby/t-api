@@ -5,6 +5,10 @@ const fastify = require('fastify')({
 
 // ─── PRE-ROUTE ────────────────────────────────────────────────────────────────
 // Runs before every request reaches a route handler.
+fastify.register(require('@fastify/rate-limit'), {
+    max: 100,           // max requests per timeWindow per IP
+    timeWindow: '1 minute'
+});
 fastify.register(require('./auth'));
 
 // ─── ROUTES ───────────────────────────────────────────────────────────────────

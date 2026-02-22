@@ -18,6 +18,7 @@
     "test": "AZURE_TENANT_ID=your-tenant-id AZURE_CLIENT_ID=your-client-id node index.js"
   },
   "dependencies": {
+    "@fastify/rate-limit": "^10.3.0",
     "fastify": "^5.6.2"
   }
 }
