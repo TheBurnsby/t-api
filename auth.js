@@ -50,9 +50,6 @@ async function authPlugin(fastify, options) {
                 });
             });
             request.user = decoded;
-
-            // ensure request.body is always an object
-            request.body = request.body ?? {};
         } catch (err) {
             reply.code(401).send({ error: 'Invalid or expired token' });
         }
