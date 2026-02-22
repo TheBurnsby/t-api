@@ -6,6 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A Fastify API service that exposes custom endpoints for consumption by a separate front-end application. **Every request must be authenticated** via a Microsoft Entra ID (Azure AD) JWT token — the `auth.js` plugin handles this globally and should always be registered in `index.js`.
 
+## TODO
+
+- Install `@fastify/cors` and register in the PRE-ROUTE section of `index.js` to control allowed origins for the front-end.
+
 ## Standards
 
 - Always ask before making architectural changes.
