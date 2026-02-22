@@ -15,7 +15,8 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "AZURE_TENANT_ID=your-tenant-id AZURE_CLIENT_ID=your-client-id node index.js",
+    "start": "node index.js",
+    "start-dev": "node --env-file=.env index.js",
     "test": "node --test --experimental-test-module-mocks tests/**/*.test.js"
   },
   "dependencies": {
