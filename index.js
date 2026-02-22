@@ -13,6 +13,7 @@ fastify.register(require('./auth'));
 
 // ─── ROUTES ───────────────────────────────────────────────────────────────────
 // Each module registers one or more endpoints.
+fastify.register(require('./routes/health'));
 fastify.register(require('./routes/hello'));
 
 // ─── AFTER-ROUTE ──────────────────────────────────────────────────────────────
