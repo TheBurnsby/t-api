@@ -24,8 +24,9 @@ Single route plugin, no auth required on the endpoint.
 
 ```
 POST /service-accounts
-  Body (optional): { name: string }
-  Response 201:   { id, key, name, createdAt }  ← key only returned here
+  Body (required): { name: string }  ← validated by Fastify inline schema (AJV)
+  Response 201:    { id, key, name, createdAt }  ← key only returned here
+  Response 400:    if name is missing or blank
 ```
 
 ### `auth.js` (new — replaces current)

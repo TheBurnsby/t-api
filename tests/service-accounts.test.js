@@ -81,12 +81,22 @@ test('POST /service-accounts creates an account and returns 201', async () => {
     assert.ok(body.createdAt, 'response should include createdAt');
 });
 
-test('POST /service-accounts with no body defaults name to "unnamed"', async () => {
+test('POST /service-accounts with no body returns 400', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({ method: 'POST', url: '/service-accounts' });
-    assert.equal(res.statusCode, 201);
-    assert.equal(res.json().name, 'unnamed');
+    assert.equal(res.statusCode, 400);
+});
+
+test('POST /service-accounts with blank name returns 400', async () => {
+    mockAccounts.clear();
+    const app = buildApp();
+    const res = await app.inject({
+        method: 'POST',
+        url: '/service-accounts',
+        body: { name: '' },
+    });
+    assert.equal(res.statusCode, 400);
 });
 
 test('POST /service-accounts does not require Authorization header', async () => {

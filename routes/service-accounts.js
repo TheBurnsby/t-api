@@ -25,13 +25,23 @@ async function serviceAccountRoutes(fastify, _opts) {
      * Creates a new service account. No authentication required — this is the
      * bootstrap endpoint that allows callers to obtain an API key for the first time.
      *
-     * @param {object} [request.body.name] - Optional human-readable label for the account
+     * @param {string} request.body.name - Required human-readable label for the account.
+     *   Validated by Fastify schema before the handler runs; returns 400 if missing or blank.
      * @returns {201} { id: string, key: string, name: string, createdAt: string }
      *   The full account object including the plaintext key (only returned here).
      */
-    fastify.post('/service-accounts', async (request, reply) => {
-        const name = request.body?.name ?? 'unnamed';
-        const account = createAccount(name);
+    fastify.post('/service-accounts', {
+        schema: {
+            body: {
+                type: 'object',
+                required: ['name'],
+                properties: {
+                    name: { type: 'string', minLength: 1 }
+                }
+            }
+        }
+    }, async (request, reply) => {
+        const account = createAccount(request.body.name);
         return reply.code(201).send(account);
     });
 }
