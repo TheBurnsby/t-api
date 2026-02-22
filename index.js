@@ -1,20 +1,29 @@
-
 const fastify = require('fastify')({
-    logger: false
+    logger: false,
+    trustProxy: true  // API sits behind a reverse proxy that handles TLS termination
 });
 
-// Register auth middleware
+// ─── PRE-ROUTE ────────────────────────────────────────────────────────────────
+// Runs before every request reaches a route handler.
 fastify.register(require('./auth'));
 
-// Register routes
+// ─── ROUTES ───────────────────────────────────────────────────────────────────
+// Each module registers one or more endpoints.
 fastify.register(require('./routes/hello'));
 
+// ─── AFTER-ROUTE ──────────────────────────────────────────────────────────────
+// Runs after a route handler resolves, before the response is sent.
+// Use for response sanitization or transformations.
+fastify.addHook('onSend', async (request, reply, payload) => {
+    // placeholder
+    return payload;
+});
 
-// Run the server
+// ─── START ────────────────────────────────────────────────────────────────────
 fastify.listen({ port: 8080 }, function (err, address) {
     if (err) {
         fastify.log.error(err)
         process.exit(1)
     }
     console.log(`Server is now listening on ${address}`)
-})
+});
