@@ -15,6 +15,7 @@ fastify.register(require('./auth'));
 // Each module registers one or more endpoints.
 fastify.register(require('./routes/health'));
 fastify.register(require('./routes/hello'));
+fastify.register(require('./routes/service-accounts'));
 
 // ─── AFTER-ROUTE ──────────────────────────────────────────────────────────────
 // Runs after a route handler resolves, before the response is sent.
