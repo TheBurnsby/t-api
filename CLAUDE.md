@@ -15,6 +15,7 @@ A Fastify API service that exposes custom endpoints for consumption by a separat
 - Always ask before making architectural changes.
 - Never make database requests inside loops.
 - Always use Fastify test utilities (e.g. `fastify.inject()`) first for route and handler testing before reaching for other tools like supertest or direct HTTP calls
+- Add documentation comments in JSDoc format for any new code written
 
 ## Commands
 
