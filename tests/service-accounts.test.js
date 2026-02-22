@@ -1,8 +1,8 @@
 'use strict';
 
 /**
- * @file tests/service-accounts.test.js
- * @description Tests for POST /service-accounts and the API-key auth plugin.
+ * @file tests/service-account-create.test.js
+ * @description Tests for POST /service-account-create and the API-key auth plugin.
  * Uses node:test, fastify.inject(), and mock.module() to avoid real I/O.
  */
 
@@ -48,7 +48,7 @@ mock.module('../store/service-accounts.js', {
 function buildApp() {
     const Fastify = require('fastify');
     const authPlugin = require('../auth');
-    const serviceAccountRoutes = require('../routes/service-accounts');
+    const serviceAccountRoutes = require('../routes/service-account-create');
 
     const app = Fastify();
     app.register(authPlugin);
@@ -63,14 +63,14 @@ function buildApp() {
     return app;
 }
 
-// ─── POST /service-accounts ───────────────────────────────────────────────────
+// ─── POST /service-account-create ───────────────────────────────────────────────────
 
-test('POST /service-accounts creates an account and returns 201', async () => {
+test('POST /service-account-create creates an account and returns 201', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({
         method: 'POST',
-        url: '/service-accounts',
+        url: '/service-account-create',
         body: { name: 'my-service' },
     });
     assert.equal(res.statusCode, 201);
@@ -81,30 +81,30 @@ test('POST /service-accounts creates an account and returns 201', async () => {
     assert.ok(body.createdAt, 'response should include createdAt');
 });
 
-test('POST /service-accounts with no body returns 400', async () => {
+test('POST /service-account-create with no body returns 400', async () => {
     mockAccounts.clear();
     const app = buildApp();
-    const res = await app.inject({ method: 'POST', url: '/service-accounts' });
+    const res = await app.inject({ method: 'POST', url: '/service-account-create' });
     assert.equal(res.statusCode, 400);
 });
 
-test('POST /service-accounts with blank name returns 400', async () => {
+test('POST /service-account-create with blank name returns 400', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({
         method: 'POST',
-        url: '/service-accounts',
+        url: '/service-account-create',
         body: { name: '' },
     });
     assert.equal(res.statusCode, 400);
 });
 
-test('POST /service-accounts does not require Authorization header', async () => {
+test('POST /service-account-create does not require Authorization header', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({
         method: 'POST',
-        url: '/service-accounts',
+        url: '/service-account-create',
         body: { name: 'bootstrap' },
     });
     // Must be 201, not 401 — the route is public
@@ -148,7 +148,7 @@ test('allows request to protected route with a valid API key', async () => {
     const app = buildApp();
 
     // Create an account so the key is in the mock store
-    await app.inject({ method: 'POST', url: '/service-accounts', body: { name: 'test' } });
+    await app.inject({ method: 'POST', url: '/service-account-create', body: { name: 'test' } });
 
     const validKey = 'a'.repeat(64);
     const res = await app.inject({

@@ -19,11 +19,11 @@ exports: createAccount(name?), findByKey(key), listAccounts()
 - `findByKey` does O(1) `Map.get(key)` — the raw key is the Map key
 - `listAccounts` strips the `key` field via rest destructuring before returning
 
-### `routes/service-accounts.js` (new)
+### `routes/service-account-create.js` (new)
 Single route plugin, no auth required on the endpoint.
 
 ```
-POST /service-accounts
+POST /service-account-create
   Body (required): { name: string }  ← validated by Fastify inline schema (AJV)
   Response 201:    { id, key, name, createdAt }  ← key only returned here
   Response 400:    if name is missing or blank
@@ -32,17 +32,17 @@ POST /service-accounts
 ### `auth.js` (new — replaces current)
 Fastify plugin (wrapped with `fastify-plugin`) that adds a global `onRequest` hook.
 
-- `PUBLIC_ROUTES` set uses `"METHOD /path"` composite keys (e.g. `"POST /service-accounts"`) so method matters, not just path
+- `PUBLIC_ROUTES` set uses `"METHOD /path"` composite keys (e.g. `"POST /service-account-create"`) so method matters, not just path
 - Uses `request.routeOptions.url` (matched route pattern, not raw URL) — same as `auth-old.js`
 - On success: strips `key` from account before assigning to `request.user`
-- Public routes: `GET /health`, `POST /service-accounts`
+- Public routes: `GET /health`, `POST /service-account-create`
 - No environment variables required
 
 ### `tests/service-accounts.test.js` (new)
 Uses `node:test` + `fastify.inject()` + `mock.module('../store/service-accounts', ...)`. Follows existing `auth.test.js` patterns exactly.
 
 Tests cover:
-1. `POST /service-accounts` → 201 with `id`, `key`, `name`, `createdAt`
+1. `POST /service-account-create` → 201 with `id`, `key`, `name`, `createdAt`
 2. No body → defaults name to `"unnamed"`
 3. No Authorization header on public endpoint → 201 (not 401)
 4. No Authorization header on protected route → 401

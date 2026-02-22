@@ -1,10 +1,10 @@
 'use strict';
 
 /**
- * @file routes/service-accounts.js
+ * @file routes/service-account-create.js
  * @description Fastify route plugin for service account management.
  *
- * POST /service-accounts — Open endpoint (no auth required). Creates a new service
+ * POST /service-account-create — Open endpoint (no auth required). Creates a new service
  *   account and returns its API key. The key is only present in this response;
  *   it cannot be retrieved again from any other endpoint.
  */
@@ -18,9 +18,9 @@ const { createAccount } = require('../store/service-accounts');
  * @param {object} _opts - Unused plugin options
  * @returns {Promise<void>}
  */
-async function serviceAccountRoutes(fastify, _opts) {
+async function serviceAccountCreate(fastify, _opts) {
     /**
-     * POST /service-accounts
+     * POST /service-account-create
      *
      * Creates a new service account. No authentication required — this is the
      * bootstrap endpoint that allows callers to obtain an API key for the first time.
@@ -30,7 +30,7 @@ async function serviceAccountRoutes(fastify, _opts) {
      * @returns {201} { id: string, key: string, name: string, createdAt: string }
      *   The full account object including the plaintext key (only returned here).
      */
-    fastify.post('/service-accounts', {
+    fastify.post('/service-account-create', {
         schema: {
             body: {
                 type: 'object',
@@ -46,4 +46,4 @@ async function serviceAccountRoutes(fastify, _opts) {
     });
 }
 
-module.exports = serviceAccountRoutes;
+module.exports = serviceAccountCreate;

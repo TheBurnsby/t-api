@@ -10,8 +10,8 @@
  * createdAt — never the key itself). On failure a 401 is returned immediately.
  *
  * Public routes that bypass this check:
- *   GET  /health           — health check, no auth needed
- *   POST /service-accounts — account creation must be open so callers can obtain a key
+ *   GET  /health                  — health check, no auth needed
+ *   POST /service-account-create  — account creation must be open so callers can obtain a key
  */
 
 const fp = require('fastify-plugin');
@@ -21,14 +21,14 @@ const { findByKey } = require('./store/service-accounts');
  * Routes that bypass API-key authentication entirely.
  *
  * Each entry is a composite `"METHOD /path"` string so that, for example,
- * only `POST /service-accounts` is open — a future `GET /service-accounts`
+ * only `POST /service-account-create` is open — a future `GET /service-account-create`
  * would still require a valid key.
  *
  * @type {Set<string>}
  */
 const PUBLIC_ROUTES = new Set([
     'GET /health',
-    'POST /service-accounts',
+    'POST /service-account-create',
 ]);
 
 /**
