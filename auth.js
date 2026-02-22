@@ -50,7 +50,7 @@ async function authPlugin(fastify, options) {
             request.body = request.body ?? {};
             console.log(request.body)
         } catch (err) {
-            reply.code(401).send({ error: 'Invalid or expired token', details: err.message });
+            reply.code(401).send({ error: 'Invalid or expired token' });
         }
     });
 }
