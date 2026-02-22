@@ -32,7 +32,7 @@ mock.module('jwks-rsa', {
 // ─── App factory ──────────────────────────────────────────────────────────────
 function buildApp() {
     const Fastify = require('fastify');
-    const authPlugin = require('../auth');
+    const authPlugin = require('../auth-old');
     const app = Fastify();
     app.register(authPlugin);
     app.get('/test', async () => ({ ok: true }));
