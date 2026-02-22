@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Context
+
+A Fastify API service that exposes custom endpoints for consumption by a separate front-end application. **Every request must be authenticated** via a Microsoft Entra ID (Azure AD) JWT token — the `auth.js` plugin handles this globally and should always be registered in `index.js`.
+
+## Standards
+
+- Always ask before making architectural changes.
+- Never make database requests inside loops.
+
 ## Commands
 
 ```bash
@@ -16,6 +25,6 @@ A minimal [Fastify](https://fastify.dev/) v5 REST API running on port 8080.
 
 - **`index.js`** — Entry point. Registers plugins and route modules, then starts the server.
 - **`routes/`** — Each file exports an async Fastify route plugin and is registered in `index.js`.
-- **`auth.js`** — A Fastify plugin (via `fastify-plugin`) that adds an `onRequest` hook to validate Microsoft Entra ID (Azure AD) Bearer tokens using `jsonwebtoken` + `jwks-rsa`. It reads `AZURE_TENANT_ID` and `AZURE_CLIENT_ID` from environment variables. Currently commented out in `index.js`.
+- **`auth.js`** — A Fastify plugin (via `fastify-plugin`) that adds an `onRequest` hook to validate Microsoft Entra ID (Azure AD) Bearer tokens using `jsonwebtoken` + `jwks-rsa`. It reads `AZURE_TENANT_ID` and `AZURE_CLIENT_ID` from environment variables. Must be registered in `index.js` before route plugins.
 
-When auth is enabled, `request.user` is populated with the decoded JWT payload and `request.body` is guaranteed to be an object before route handlers run.
+After auth, `request.user` is populated with the decoded JWT payload and `request.body` is guaranteed to be an object before route handlers run.
