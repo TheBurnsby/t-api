@@ -10,6 +10,7 @@ fastify.register(require('@fastify/rate-limit'), {
     timeWindow: '1 minute'
 });
 fastify.register(require('./auth'));
+fastify.register(require('./plugins/snowflake'));
 
 // ─── ROUTES ───────────────────────────────────────────────────────────────────
 // Each module registers one or more endpoints.
