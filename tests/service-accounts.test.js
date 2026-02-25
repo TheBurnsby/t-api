@@ -65,7 +65,7 @@ function buildApp() {
 
 // ─── POST /service-account-create ───────────────────────────────────────────────────
 
-test('POST /service-account-create creates an account and returns 201', async () => {
+test('given a valid name, when POST /service-account-create, then returns 201 with account details', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({
@@ -81,14 +81,14 @@ test('POST /service-account-create creates an account and returns 201', async ()
     assert.ok(body.createdAt, 'response should include createdAt');
 });
 
-test('POST /service-account-create with no body returns 400', async () => {
+test('given no request body, when POST /service-account-create, then returns 400', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({ method: 'POST', url: '/service-account-create' });
     assert.equal(res.statusCode, 400);
 });
 
-test('POST /service-account-create with blank name returns 400', async () => {
+test('given a blank name, when POST /service-account-create, then returns 400', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({
@@ -99,7 +99,7 @@ test('POST /service-account-create with blank name returns 400', async () => {
     assert.equal(res.statusCode, 400);
 });
 
-test('POST /service-account-create does not require Authorization header', async () => {
+test('given no Authorization header, when POST /service-account-create, then returns 201 (route is public)', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({
@@ -113,14 +113,14 @@ test('POST /service-account-create does not require Authorization header', async
 
 // ─── Auth plugin — API key validation ─────────────────────────────────────────
 
-test('rejects request to protected route with no Authorization header', async () => {
+test('given no Authorization header, when GET /protected, then returns 401', async () => {
     const app = buildApp();
     const res = await app.inject({ method: 'GET', url: '/protected' });
     assert.equal(res.statusCode, 401);
     assert.deepEqual(res.json(), { error: 'Missing or invalid Authorization header' });
 });
 
-test('rejects request with non-Bearer Authorization header', async () => {
+test('given a non-Bearer Authorization header, when GET /protected, then returns 401', async () => {
     const app = buildApp();
     const res = await app.inject({
         method: 'GET',
@@ -131,7 +131,7 @@ test('rejects request with non-Bearer Authorization header', async () => {
     assert.deepEqual(res.json(), { error: 'Missing or invalid Authorization header' });
 });
 
-test('rejects request with an unknown API key', async () => {
+test('given an unknown API key, when GET /protected, then returns 401', async () => {
     mockAccounts.clear();
     const app = buildApp();
     const res = await app.inject({
@@ -143,7 +143,7 @@ test('rejects request with an unknown API key', async () => {
     assert.deepEqual(res.json(), { error: 'Invalid API key' });
 });
 
-test('allows request to protected route with a valid API key', async () => {
+test('given a valid API key, when GET /protected, then returns 200', async () => {
     mockAccounts.clear();
     const app = buildApp();
 
@@ -160,7 +160,7 @@ test('allows request to protected route with a valid API key', async () => {
     assert.deepEqual(res.json(), { ok: true });
 });
 
-test('GET /health remains public — no API key needed', async () => {
+test('given no Authorization header, when GET /health, then returns 200 (public route)', async () => {
     const app = buildApp();
     const res = await app.inject({ method: 'GET', url: '/health' });
     assert.equal(res.statusCode, 200);

@@ -37,7 +37,7 @@ function buildApp() {
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
-test('decorates fastify with snowflake.execute', async (t) => {
+test('given the plugin is registered, when app is ready, then snowflake.execute is a function', async (t) => {
     const app = buildApp();
     t.after(() => app.close());
 
@@ -46,7 +46,7 @@ test('decorates fastify with snowflake.execute', async (t) => {
     assert.equal(typeof app.snowflake.execute, 'function');
 });
 
-test('execute resolves with rows', async (t) => {
+test('given query rows exist, when snowflake.execute is called, then resolves with those rows', async (t) => {
     executeRows = [{ ID: 1 }, { ID: 2 }];
     const app = buildApp();
     t.after(() => app.close());
@@ -57,7 +57,7 @@ test('execute resolves with rows', async (t) => {
     assert.deepEqual(rows, [{ ID: 1 }, { ID: 2 }]);
 });
 
-test('execute rejects on query error', async (t) => {
+test('given a query error, when snowflake.execute is called, then rejects with the error message', async (t) => {
     executeError = new Error('SQL compilation error');
     const app = buildApp();
     t.after(() => { executeError = null; return app.close(); });
@@ -70,7 +70,7 @@ test('execute rejects on query error', async (t) => {
     );
 });
 
-test('destroy is called on app close', async () => {
+test('given a connected app, when app is closed, then snowflake connection is destroyed', async () => {
     destroyCalled = false;
     const app = buildApp();
 
@@ -80,7 +80,7 @@ test('destroy is called on app close', async () => {
     assert.ok(destroyCalled);
 });
 
-test('plugin throws at startup if connection fails', async (t) => {
+test('given bad credentials, when app starts, then throws with connection error', async (t) => {
     connectError = new Error('bad credentials');
     const app = buildApp();
     t.after(() => { connectError = null; });

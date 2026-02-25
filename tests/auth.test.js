@@ -40,14 +40,14 @@ function buildApp() {
 }
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
-test('rejects request with no authorization header', async () => {
+test('given no Authorization header, when GET /test, then returns 401', async () => {
     const app = buildApp();
     const res = await app.inject({ method: 'GET', url: '/test' });
     assert.equal(res.statusCode, 401);
     assert.deepEqual(res.json(), { error: 'Missing or invalid Authorization header' });
 });
 
-test('rejects request without Bearer prefix', async () => {
+test('given a non-Bearer Authorization header, when GET /test, then returns 401', async () => {
     const app = buildApp();
     const res = await app.inject({
         method: 'GET',
@@ -58,7 +58,7 @@ test('rejects request without Bearer prefix', async () => {
     assert.deepEqual(res.json(), { error: 'Missing or invalid Authorization header' });
 });
 
-test('rejects an invalid JWT token', async () => {
+test('given an invalid JWT token, when GET /test, then returns 401', async () => {
     const app = buildApp();
     const res = await app.inject({
         method: 'GET',
@@ -69,7 +69,7 @@ test('rejects an invalid JWT token', async () => {
     assert.deepEqual(res.json(), { error: 'Invalid or expired token' });
 });
 
-test('allows a valid Entra JWT through to the route', async () => {
+test('given a valid Entra JWT, when GET /test, then returns 200', async () => {
     const app = buildApp();
     const token = jwt.sign(
         { sub: 'test-user' },
